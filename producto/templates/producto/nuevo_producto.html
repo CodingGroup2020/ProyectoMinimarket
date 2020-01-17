@@ -69,12 +69,9 @@
                             <label for="" class="">Precio ($)</label>
                             <input class="form-control" type="text" name="precio" id="precio_producto" required>
                         </div>
-                        <div class="form-group">
-                          <label for="" class="">Cantidad</label>
-                          <input class="form-control" type="text" name="cantidad" id="cantidad_producto" required>
-                      </div>
+                        
     
-                        <input type="submit" value="Guardar Producto" class="form-control btn btn-outline-info" >
+                        <input type="submit" value="Guardar Producto" class="form-control btn btn-info" >
                         </div>
     
                       </div>
@@ -98,8 +95,8 @@
                         <th >{{p.codigo_prod}}</th>
                         <th >{{p.descripcio}}</th>
                         <th >{{p.precio}} ($)</th>
-                        <th ><input type="button" value="Editar"></th>
-                        <th ><input type="button" value="Eliminar"></th>
+                        <th ><input type="button"  class="btn btn-success" value="Editar"></th>
+                        <th ><input type="button" class="btn btn-danger" value="Eliminar"></th>
                         {% endfor %}
                     </tbody>
                     
