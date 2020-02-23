@@ -1,0 +1,212 @@
+{% extends 'core/base.html' %}
+
+ 
+{% load static %}
+{% block content %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<body>
+<form action="/informe2/" id="formFecha" method="POST">
+    {% csrf_token %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4 " style="display: none;">Informes Ventas</h1>
+            <div class="form-inline mt-4">
+                
+                    <label for="" class=""><b>Seleccionar Usuario:</b></label>
+                    <select name="usuario" class="form-control ml-3 col-md-2" required="">
+                        <option value="">Seleccione</option>
+                        <option value="admin">Admin</option> 
+                        <option value="2">Empleado 1</option>
+                        <option value="3">Empleado 2</option>
+                        <option value="4">Empleado 3</option>
+                        <option value="5">Empleado 4</option>
+                      </select>
+                    <label for="" class="ml-5"><b>Desde:</b></label>
+                    <input type="date" class="form-control ml-3" name="fechaUno" required="">
+                    <label for="" class="ml-3"><b>Hasta:</b></label>
+                    <input type="date" class="form-control ml-3" name="fechaDos" required="">
+                    <button type="submit" class="btn btn-success ml-2">Buscar</button>
+                
+            </div>
+        </div>
+    </div>
+</form>
+    <center class="container" >
+        <!-- <table id="tablaConfiguracion2" class="table table-bordered col-md-10"> -->
+             <table id="tablaConfiguracion" class="table table-bordered ">
+            <thead>
+                <tr style="background-color: #263238; color: white;">
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Fecha de Venta</th>
+                    <th scope="col">Total Venta</th>
+                    <th scope="col">Ver Detalles</th>
+                </tr>
+            </thead>
+            <tbody id="mostrarContenido">
+
+            </tbody>
+        </table>
+
+        <div class="form-inline mt-2 ">
+      <label for="" class="ml-auto">Total de ventas para el periodo seleccionado ($): </label>
+      <input type="text" name="" id="periodoTotalVenta" class="form-control ml-3 mr-1 col-md-2   " disabled="">
+  </div>
+    </center>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalProductos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Productos Vendidos</h5>
+      </div>
+      <div class="modal-body" id="mostrarDetalle">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiarModal();">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+<style>.dataTables_empty{display: none;}
+.example::-webkit-scrollbar {
+    display: none;
+}
+
+</style>
+<script>
+
+
+
+ $(document).ready(function() {
+
+    $('#tablaConfiguracion').DataTable( {
+        "scrollY":        "250px",
+        "scrollX":        false,
+        "scrollCollapse": false,
+        "paging":         false,
+        "info":           false,// oculta el contador de entradas
+        "searching":false,
+        "ordering":false,
+         "language": {
+      "emptyTable": false,
+       "zeroRecords":   false
+    }
+    } );
+     $(".dataTables_scrollHead").css('overflow', 'auto');
+     $(".dataTables_scrollBody").css('overflow','scroll');
+     $(".dataTables_scrollBody").addClass('example'); // oculto scroll
+      $(".dataTables_scrollHeadInner").css('width', '100%');
+        $(".no-footer").css('width', '100%');
+
+      
+} );
+
+
+
+$( "#formFecha" ).submit(function( event ) {
+    event.preventDefault();
+    var form = $( "#formFecha" );
+
+  $.ajax({
+    url:'/informe2/',
+    data: form.serialize(),
+    type: form.attr("method"),
+    success: function (data) {
+    // console.log(data[0].fields.fecha)
+    console.log(data)
+
+if (data.length == 0) {
+$("#mostrarContenido").html(`<tr>
+          <td colspan="4" class="text-center">El usuario no registra ventas para el periodo seleccionado</td>
+          </tr>'`);
+$("#periodoTotalVenta").val("")
+
+
+}else{
+
+    $("#mostrarContenido").html("");
+    var venta,periodoTotalVenta=0;
+    for (var i = 0; i < data.length; i++) {
+
+     venta+=`<tr>
+          <td>`+data[i].fields.usuario+`</td>
+          <td>`+data[i].fields.fecha+`</td>
+          <td>`+data[i].fields.totalVenta+`</td>
+          <td><button id="bloquear`+data[i].pk+`" onclick="consultarDetalle(`+data[i].pk+`);" class="btn btn-success " data-toggle="modal" data-target="#modalProductos">Ver</button></td>
+          </tr>'`;
+
+        periodoTotalVenta= periodoTotalVenta+data[i].fields.totalVenta; 
+
+    }
+    $("#periodoTotalVenta").val(periodoTotalVenta)
+    $("#mostrarContenido").html(venta);
+ }
+
+    },
+    error:function(data) {
+        console.log("No se ha podido obtener la información");
+    }
+  });
+ // return false;
+});
+
+
+
+
+function consultarDetalle(idVenta) {
+    
+var venta="";
+ $.ajax({
+    url:"/productosVendidos/",
+    data: {'idVenta':idVenta,csrfmiddlewaretoken: '{{ csrf_token }}' },
+    type: "POST",
+    success: function (data) {
+    // console.log(data) 
+    
+    for (var i = 0; i < data.length; i++) {
+
+     venta+=`<li>`+data[i].nombre+`</li>`;
+    }
+    $("#mostrarDetalle").html("<ol>"+venta+"</ol>");
+ 
+    },
+    error:function(data) {
+        console.log("No se ha podido obtener la información");
+    }
+  });
+
+}
+
+
+
+function limpiarModal(argument) {
+    $("#mostrarDetalle").html("");
+}
+
+
+</script>
+
+
+{% endblock content %}

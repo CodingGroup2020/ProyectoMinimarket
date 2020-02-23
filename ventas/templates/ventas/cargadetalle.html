@@ -1,0 +1,24 @@
+<form method="POST">
+{% csrf_token %}
+    <input type="text" name="ventas" id="ventas" placeholder="id venta">
+    <input type="text" name="producto" id="producto" placeholder="id producto">
+    <button type="submit">Gurardar</button>
+</form>
+<table id="table" data-toggle="table" data-search="true" data-height="200"  class="table table-bordered ">
+                    <thead  class=" ">
+                      <tr style="background-color: #263238; color: white;">
+                        <th scope="col">Código de Producto</th>
+                        <th scope="col">Descripción</th>
+  
+                        <th scope="col">Precio Venta($)</th>
+                     
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in productos %}
+                        <tr style="background-color: #cfd8dc; "><td scope="col">{{p.producto.codigo}}</td>
+                        <td scope="col">{{p.producto.nombre}}</td>
+                        <td scope="col">{{p.producto.precioVenta}} ($)</td>
+                    {% endfor %}
+                    </tbody>
+                  </table>

@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+
+{% load static %}
+
+
+{% block content %}
+
+<div class="container-fluid my-5">
+        <div class="row ">
+            <div class="col-md-4 my-5">
+                <form action="#" method="post">
+                {% csrf_token %} 
+                    <div class="card">
+                        <center><h5 class="card-header " style="background-color: #263238; color:white;" >Ingreso de Nueva Compra</h5></center>
+                        <div class="card-body" style="background-color: #cfd8dc; ">
+                         
+                          <div class="form-group">
+                              <label for="" class="">Tipo de Compra</label>
+                              <input class="form-control" type="text" name="tipoCompra" id="tipoCompra" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="" class="">Fecha de la Compra</label>
+                            <input class="form-control" type="date" name="fechaCompra" id="fechaCompra" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="">Precio Total de la Compra ($)</label>
+                            <input class="form-control" type="text" name="valorCompra" id="valorCompra" required>
+                        </div>
+                        
+                        <input type="submit" value="Guardar Compra" class="form-control btn btn-primary" >
+                        </div>
+    
+                      </div>
+                </form>
+            </div>
+            <div class="col-md-8 my-5">
+                <table id="table" data-toggle="table" data-search="true" data-height="200"  class="table table-bordered ">
+                    <thead  class=" ">
+                      <tr style="background-color: #263238; color: white;">
+                        <th scope="col">Tipo de Compra</th>
+                        <th scope="col">Fecha de Compra</th>
+                        <th scope="col">Valor Total de Compra($)</th>
+                        <th scope="col">Editar</th>
+                        <th scope="col">Eliminar</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in compras %}
+                        <tr style="background-color: #cfd8dc; "><td scope="col">{{c.tipoCompra}}</td>
+                        <td scope="col">{{c.fechaCompra}}</td>
+                        <td scope="col">($) {{c.valorCompra}} </td>
+                        <td scope="col"><a href="{% url 'editaCompra' c.id %}" role="button" class="btn btn-success"><i class="fas fa-external-link-alt"></i></a></td>
+                        <td scope="col"><a href="{% url 'borraCompra' c.id %}" role="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></a></td></tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
+
+
+{% comment %} hay que hacer el formulario con el atributo name="" asi se puede enviar con el boton submit {% endcomment %}
+{% endblock content %}
+
+

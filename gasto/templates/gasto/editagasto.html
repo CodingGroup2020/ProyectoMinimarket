@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+
+
+{% load static %}
+
+
+{% block content %}
+
+{% comment %} esta es la vista de borrar producto ! 
+
+hay que poner un cuadro que diga que si estas seguro de borrarlo 
+
+y un boton que diga si (es un submit y otro que diga no) {% endcomment %}
+
+<center><div class="col-md-4 my-5 ">
+    <form action="#" method="post">
+                {% csrf_token %} 
+                    <div class="card">
+                        <center><h5 class="card-header " style="background-color: #263238; color:white;" >Actualización de Gasto</h5></center>
+                        <div class="card-body" style="background-color: #cfd8dc; ">
+                         
+                          <div class="form-group">
+                              <label for="" class="">Tipo de Gasto</label>
+                              {{form.tipoGastos}}
+                          </div>
+                          <div class="form-group">
+                            <label for="" class="">Descripción</label>
+                            {{form.detalle}}
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="">Fecha de Pago</label>
+                            {{form.fechaPago}}
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="">Valor del Pago</label>
+                           {{form.valor}}
+                        </div>
+                        
+                        <div class="form-group mx-3">
+                            <input type="submit" value="Actualizar Gasto" class="form-control btn btn-primary" >
+                            <a type="button" href="{% url 'gasto' %}" class="mt-2 form-control btn btn-dark">Cancelar</a>
+                        </div>
+    
+                        
+                        </div>
+    
+                      </div>
+                </form>
+</div></center>
+
+
+{% endblock content %}

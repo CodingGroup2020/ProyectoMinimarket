@@ -1,0 +1,33 @@
+
+
+{% extends 'core/base.html' %}
+
+
+{% load static %}
+
+
+{% block content %}
+
+{% comment %} esta es la vista de borrar producto ! 
+
+hay que poner un cuadro que diga que si estas seguro de borrarlo 
+
+y un boton que diga si (es un submit y otro que diga no) {% endcomment %}
+
+<center>
+<form action="" method="POST">
+  {% csrf_token %}
+<div class="jumbotron col-md-8">
+    <center> <h1 class="display-5">¿Estas seguro que deseas borrar la compra de <b>{{object.tipoCompra}}</b> efectuada el día <b>{{object.fechaCompra}}</b>? </h1></center>
+     <!-- <h3 class="display-5"> </h3> -->
+     <hr class="my-4">
+     <p class="lead">
+       <center><a class="btn btn-dark btn-lg" href="{% url 'cargaCompra' %}" role="button">Cancelar</a>
+           <button class="btn btn-danger btn-lg ml-3" type="submit">Eliminar</button></center>
+     </p>
+   </div>
+  </form>
+  </center>
+
+
+{% endblock content %}
