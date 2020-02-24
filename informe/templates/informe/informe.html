@@ -68,8 +68,19 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">Productos Vendidos</h5>
       </div>
-      <div class="modal-body" id="mostrarDetalle">
-        
+      <div class="modal-body" >
+        <table class="table table-light">
+          <thead class="thead-light">
+            <tr>
+              <th>Producto</th>
+              <th>Precio Producto ($)</th>
+              <th>Precio Vendido ($)</th>
+            </tr>
+          </thead>
+          <tbody id="mostrarDetalle">
+           
+          </tbody>
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiarModal();">Cerrar</button>
@@ -177,19 +188,36 @@ $("#periodoTotalVenta").val("")
 
 function consultarDetalle(idVenta) {
     
-var venta="";
+var producto="",precioVendido="",precioProductoAsignado=""
  $.ajax({
     url:"/productosVendidos/",
     data: {'idVenta':idVenta,csrfmiddlewaretoken: '{{ csrf_token }}' },
     type: "POST",
     success: function (data) {
-    // console.log(data) 
+     console.log(data) 
     
     for (var i = 0; i < data.length; i++) {
 
-     venta+=`<li>`+data[i].nombre+`</li>`;
+
+switch (data[i].model) {
+  case "core.producto":
+  producto+=`<li>`+data[i].fields.nombre+`</li>`;
+  precioProductoAsignado+=`<li>`+data[i].fields.precioVenta+`</li>`;
+    break;
+    case "ventas.detalleventa":
+  precioVendido+=`<li>`+data[i].fields.precioProducto+`</li>`;
+    break;
+}
+
+
+     
     }
-    $("#mostrarDetalle").html("<ol>"+venta+"</ol>");
+    
+    $("#mostrarDetalle").html(` <tr>
+              <td>`+producto+`</td>
+              <td>`+precioProductoAsignado+`</td>
+              <td>`+precioVendido+`</td>
+            </tr>`);
  
     },
     error:function(data) {
@@ -201,7 +229,7 @@ var venta="";
 
 
 
-function limpiarModal(argument) {
+function limpiarModal() {
     $("#mostrarDetalle").html("");
 }
 
