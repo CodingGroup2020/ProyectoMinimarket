@@ -1,0 +1,128 @@
+{% extends 'core/base.html' %}
+
+ 
+{% load static %}
+{% block content %}
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<body>
+  <form  id="formFecha" method="POST">
+    {% csrf_token %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <div class="form-inline mt-4">
+                
+                    <label for="" class=""><b>Desde:</b></label>
+                    <input type="date" class="form-control ml-3" name="fechaUno" required="">
+                    <label for="" class="ml-5"><b>Hasta:</b></label>
+                    <input type="date" class="form-control ml-3" name="fechaDos" required="">
+                    <button type="submit" class="btn btn-success ml-2">Buscar</button>
+                
+            </div>
+        </div>
+    </div>
+</form>
+
+    <center class="container" >
+        <!-- <table id="tablaConfiguracion2" class="table table-bordered col-md-10"> -->
+             <table id="tablaConfiguracion" class="table table-bordered ">
+            <thead>
+                <tr style="background-color: #263238; color: white;">
+                    <th scope="col">Venta</th>
+                    <th scope="col">%</th>
+                    <th scope="col">Compras</th>
+                    <th scope="col">Salidas</th>
+                    <th scope="col">Final</th>
+                </tr>
+            </thead>
+            <tbody id="mostrarContenido">
+
+            </tbody>
+        </table>
+
+    </center>
+
+
+
+
+
+</body>
+
+<script>
+
+
+                $( "#formFecha" ).submit(function( event ) {
+                    event.preventDefault();
+                    var form = $( "#formFecha" );
+                
+                  $.ajax({
+                    url:'/balance/',
+                    data: form.serialize(),
+                    type: form.attr("method"),
+                    success: function (data) {
+                    
+                    //console.log(data)
+
+
+                        if (data.length == 0) {
+                        $("#mostrarContenido").html(`<tr>
+                                  <td colspan="5" class="text-center">No existe balance para el periodo seleccionado</td>
+                                  </tr>'`);
+
+
+
+                        }else{
+
+                            $("#mostrarContenido").html("");
+                            //var contadorVentas=0, contadorCompras=0,contadorGastos;
+                            var periodoTotalVenta=0, periodoTotalCompras=0,periodoTotalSalidas=0;
+                            var periodoFinal=0, periodoPorcentaje=0;
+
+                            for (var i = 0; i < data.length; i++) {
+                        switch (data[i].model) {
+                            case "ventas.venta":
+                            periodoTotalVenta=periodoTotalVenta+data[i].fields.totalVenta;
+                            break;
+                            case "compras.compra":
+                            periodoTotalCompras=periodoTotalCompras+data[i].fields.valorCompra;
+                            break;
+                            case "gasto.gastosfijos":
+                            periodoTotalSalidas=periodoTotalSalidas+data[i].fields.valor;
+                            break;
+                        }
+
+
+                            }
+
+                        periodoPorcentaje=periodoTotalVenta * 0.3;
+                        periodoFinal=periodoPorcentaje-periodoTotalSalidas;
+                        venta=`<tr>
+                                  <td>`+periodoTotalVenta+`</td>
+                                  <td>`+periodoPorcentaje+`</td>
+                                  <td>`+periodoTotalCompras+`</td>
+                                  <td>`+periodoTotalSalidas+`</td>
+                                  <td>`+periodoFinal+`</td>`;
+
+                            $("#mostrarContenido").html(venta);
+                        }
+
+
+
+
+
+
+                    },
+                    error:function(data) {
+                        console.log("No se ha podido obtener la información");
+                    }
+                  });
+                 // return false;
+                });
+            </script>               
+            {% endblock content %}
