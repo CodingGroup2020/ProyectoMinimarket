@@ -98,7 +98,7 @@
       <input type="text" name="" id="precioTotal" class="form-control ml-3 mr-1 col-md-2   " disabled="">
   </div>
   <div class="form-inline mt-3 ">
-       <button type="button" class="btn btn-info mr-auto" onclick="" id="botonFactura">
+       <button type="button" class="btn btn-info mr-auto" onclick="" id="botonFactura" data-toggle="modal" data-target="#modalEmail">
         <i class="fas fa-file-invoice-dollar"></i>
         <b>Factura</b> </button> 
     <button type="button" class="btn btn-danger ml-auto" onclick="cancelarVenta();" id="botonCancelar">
@@ -147,6 +147,34 @@
 
 
 
+<!-- Modal email -->
+
+
+<div class="modal fade" id="modalEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Desea enviar comprobante?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="">Email</label>
+        <input type="email" class="form-control" id="email" autocomplete="off">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#email').val('');">No</button>
+        <button type="button" class="btn btn-primary" onclick="enviarMail();" data-dismiss="modal">Si</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 
  <style>.dataTables_empty{display: none;}
 </style>
@@ -168,7 +196,7 @@ $("#botonFactura").attr("disabled",true);
 $( "#formGenerarNuevaVenta" ).submit(function( event ) {
     event.preventDefault();
   $("#botonGenerarNuevaVenta").attr("disabled",true);
-
+$("#botonFactura").attr("disabled",true);
   $("#busquedaProducto").attr("disabled",false);
 $("#botonVender").attr("disabled",false);
 $("#botonCancelar").attr("disabled",false);
@@ -573,7 +601,9 @@ function terminarVenta(argument) {
     type: "POST",
     success: function (data) {
     console.log(data) // id detalle venta
-    
+    $("#mostrar").html("");
+    $("#botonGenerarNuevaVenta").attr("disabled",false);
+    $("#precioTotal").val("")
     },
     error:function(data) {
         console.log("No se ha podido obtener la información");
@@ -617,7 +647,23 @@ return resultd;*/
 
 
 
-
+function enviarMail() {
+var idVenta= $("#idVenta").val();
+  var emailUsuario= $("#email").val();
+   $.ajax({
+    url:"/enviar/",
+    data: {'idVenta':idVenta,'mail':emailUsuario,csrfmiddlewaretoken: '{{ csrf_token }}' },
+    type: "POST",
+    success: function (data) {
+    console.log(data) // id detalle venta
+    $("#email").val("");
+    
+    },
+    error:function(data) {
+        console.log("No se ha podido obtener la información");
+    }
+  });
+}
 
 
 /*deberia generar una peticion ajax que inserte la fecha , id venta cuando se de clic en el boton vender y retornar su idVenta creado, para que luego el sistema pregunte si quiere genear una factura, y recien ahi se inserta el talle de venta  y se retorna los valores*/

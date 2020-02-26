@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1><center>Ksi 24 Comprobante Online</center></h1>
+
+        <h5 ><b><center>No valido como factura.</b></center></h5>
+        <table id="tablaConfiguracion"  class="table table-bordered ">
+                    <thead  class=" ">
+                      <tr style="background-color: #263238; color: white;">
+                        <th scope="col">Código de Producto</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Precio Venta($)</th>
+                      </tr>
+                    </thead>
+         <tbody>
+        {% for d in detalleBody %}
+         <tr style="background-color: #cfd8dc; ">
+                        <td scope="col">{{d.producto.codigo}}</td>
+                        <td scope="col">{{d.producto.nombre}}</td>
+                        <td scope="col">{{d.precioProducto}} ($)</td>
+                    {% endfor %}
+                    
+                    </tbody>
+                  </table>
+                  <label for="">Total: {{total}}</label>
+    
+</body>
+</html>
