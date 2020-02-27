@@ -70,14 +70,12 @@
                     <a href="{% url 'gasto' %}" style="text-decoration:none; color: #263238;"><b>Gastos</b></a>
                 </li>
                 <li>
-                    <a href="{% url 'informe' %}" style="text-decoration:none; color: #263238;"><b>Informes</b></a>
+                    <a href="{% url 'informe' %}" style="text-decoration:none; color: #263238;"><b>Informes de Ventas</b></a>
                 </li>
                 <li>
                     <a href="{% url 'balance2' %}" style="text-decoration:none; color: #263238;"><b>Balances</b></a>
                 </li>
-                <li>
-                    <a href="#" style="text-decoration:none; color: #263238;" ><b>Cerrar Sesión</b></a>
-                </li>
+
             </ul>
 
             
@@ -90,12 +88,10 @@
                 <div class="container-fluid">
 
                     <button type="button" id="sidebarCollapse" class="btn btn-dark">
-                        <i class="fas fa-align-left"></i>
+                        <i class="fas fa-align-left"></i> 
                         <span> </span>
                     </button>
-                <!-- <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fas fa-align-justify"></i>
-                    </button>  -->
+                <a href="/logout/" class="btn btn-danger" style="text-decoration:none; color: white; " ><i class="fas fa-sign-out-alt"></i> Salir</a>
 
 
                 </div>

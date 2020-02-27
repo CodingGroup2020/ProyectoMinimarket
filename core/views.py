@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,reverse
+from django.contrib.auth import login, authenticate, logout as do_logout
 
 # Create your views here.
 from.models import Producto #se importa el modelo para traerlo y listarlo
@@ -32,3 +33,12 @@ class borrarProducto(DeleteView):
         return reverse('cargaproducto')#si se edita correctamente vuelve a la pagina principal de los productos
 
 
+
+
+
+
+
+    
+def logout(request):
+    do_logout(request)
+    return redirect('/')
